@@ -38,7 +38,10 @@ public class MeetingCalenderController {
 	}
 	
 	@GetMapping("/Schedule-Meeting")
-	public String scheduleMeeting() {
+	public String scheduleMeeting(HttpServletRequest request) {
+	List<OfficeLocationsDTO> officeLocDtos = meetingCalenderServices.populateOfficeLocations();
+	         
+	     request.setAttribute("officeLocDtos",officeLocDtos);
 		return "calender-registration.jsp";
 	}
 	//@PostMapping("/meeting-registration")
@@ -52,6 +55,8 @@ public class MeetingCalenderController {
 		}else {
 			request.setAttribute("message", "<font  style='color:green'> Meeting Record Creation failed ! </font>");	
 		}
+		List<OfficeLocationsDTO> officeLocDtos = meetingCalenderServices.populateOfficeLocations();        
+	    request.setAttribute("officeLocDtos",officeLocDtos);
 		return "calender-registration.jsp";
 		//return "meetingCalender";
 	}
@@ -68,8 +73,12 @@ public class MeetingCalenderController {
 //	}
 //	
 	@RequestMapping("/GetAllMeetingDetails")
-    public String home(Model model) {
-         model.addAttribute("calender_info_detailss", meetingCalenderServices.getAllMeetingCalenderDetails());        
+    public String home(Model model,HttpServletRequest request) {
+         model.addAttribute("calender_info_detailss", meetingCalenderServices.getAllMeetingCalenderDetails());  
+         List<OfficeLocationsDTO> officeLocDtos = meetingCalenderServices.populateOfficeLocations();
+         
+         request.setAttribute("officeLocDtos",officeLocDtos);
+         
          return "all-meeting-details.jsp";
     }
 		
@@ -86,6 +95,10 @@ public class MeetingCalenderController {
 	@RequestMapping(value="/delete-meeting",method = RequestMethod.GET)	
 	public String deleteMeetingById(@RequestParam(value="meetingId") String meetingId,HttpServletRequest request, Model model) {		
 		System.out.println("Deleted Meeting Id :: "+ meetingId);
+     List<OfficeLocationsDTO> officeLocDtos = meetingCalenderServices.populateOfficeLocations();
+	         
+	  request.setAttribute("officeLocDtos",officeLocDtos);	
+		
 	  boolean returnFlag= meetingCalenderServices.deleteMeeting(meetingId);	
 	  if(returnFlag) {
 		  request.setAttribute("delete-message", "Record deleted Successfully");
@@ -103,11 +116,13 @@ public class MeetingCalenderController {
 		request.setAttribute("calender_info_by_meeting_id", meetingCalenderServices.getMeetingCalenderDetailsByMeetingId(meetingId));	
 		
 		System.out.println("EDIT CALENDAR INFO BY MEETING::"+ getmeet.getMeetingCategory());
-		   
+		System.out.println("meetingId in meeting edit"+meetingId ); 
         List<OfficeLocationsDTO> officeLocDtos = meetingCalenderServices.populateOfficeLocations();
  
         System.out.println("OFFICE LOC DTOs::"+ officeLocDtos.toString());
         request.setAttribute("officeLocDtos",officeLocDtos);
+        
+        request.setAttribute("meetingId", meetingId);
         
 //        boolean returnFlag1= meetingCalenderServices.updateMeetingDetailsByMeetingId(meetingId);
 //        if(returnFlag1) {
@@ -120,38 +135,50 @@ public class MeetingCalenderController {
 	}      
 
 	@RequestMapping(value="/update-meeting",method = RequestMethod.POST)
-	public String updateMeetingById( String meetingId,@ModelAttribute MeetingCalenderEntity meetingCalenderEntity,HttpServletRequest request) {	
+	public String updateMeetingById(@ModelAttribute MeetingCalenderEntity meetingCalenderEntity,HttpServletRequest request) {	
 		MeetingCalenderDTO meetingCalenderDTO  = new MeetingCalenderDTO();
+        String meetingId = request.getParameter("meetingId");
+        
+		System.out.println("UPDATE Meeting FROM ServletRequest-> meetingId ::"+ request.getParameter("meetingId"));		
+		System.out.println("update page --->meetingCategory"+request.getParameter("meetingCategory"));
 		
 		meetingCalenderDTO.setMeetingCategory(request.getParameter("meetingCategory"));
-		meetingCalenderDTO.setMeetingTitle(request.getParameter("meetingTitle"));
-//		meetingCalenderDTO.setMeetingTitle(meetingCalenderEntity.getMeetingTitle());
+		meetingCalenderDTO.setMeetingOccuranceType(request.getParameter("meetingOccuranceType"));
+		meetingCalenderDTO.setMeetingStartDate(request.getParameter("meetingStartDate"));
+		meetingCalenderDTO.setMeetingEndDate(request.getParameter("meetingEndDate"));
+		meetingCalenderDTO.setMeetingStartTime(request.getParameter("meetingStartTime"));
+		meetingCalenderDTO.setMeetingStartMeridiem(request.getParameter("meetingStartMeridiem"));
+		meetingCalenderDTO.setMeetingEndTime(request.getParameter("meetingEndTime"));
+		meetingCalenderDTO.setMeetingEndMeridiem(request.getParameter("meetingEndMeridiem"));
+		meetingCalenderDTO.setMeetingTitle(request.getParameter("meetingTitle")); 
 		meetingCalenderDTO.setMeetingShortDesc(request.getParameter("meetingShortDesc"));
+		meetingCalenderDTO.setMeetingBranch(request.getParameter("meetingBranch"));
 
-//	 MeetingCalenderEntity meetingCalender = meetingCalenderServices.updateMeetingDetailsByMeetingId(meetingId,meetingCalenderDTO);
-	  MeetingCalenderDTO updateMeetInfo = meetingCalenderServices.updateMeetingDetailsByMeetingId(meetingId,meetingCalenderDTO);
-//		  if(updateMeetInfo != null) {
-//			  request.setAttribute("update-message", "Record Update Successfully");
-//			  model.addAttribute("calender_info_detailss", meetingCalenderServices.getAllMeetingCalenderDetails());        
-//		      
-//		  }
-		return "edit-meeting-details.jsp";		
+	    MeetingCalenderDTO updateMeetInfo = meetingCalenderServices.updateMeetingDetailsByMeetingId(meetingId,meetingCalenderDTO);
+	    System.out.println("update title"+updateMeetInfo.getMeetingTitle());
+	    request.setAttribute("calender_info_by_meeting_id",updateMeetInfo);	     
+	   //System.out.println(" Meeting Title  -->  "+ meetingCalenderServices.getMeetingCalenderDetailsByMeetingId(meetingId).getMeetingTitle());     
+	    return "meeting-details.jsp";
+			
 	}
 	
-//	@RequestMapping(value = "/demo-update", method = RequestMethod.GET)
-//	public String demoUpdateCalenderInfoDetails(@RequestParam(value="meetingId")String meetingId,@ModelAttribute MeetingCalenderEntity meetingCalenderEntity,HttpServletRequest request) throws Exception {
-//	
-//		MeetingCalenderEntity meetingCalender=meetingCalenderServices.storeMeetingUpdateDeatils(meetingCalenderEntity,meetingId);
-//		//SBIBranchEntity sBIBranchEntity2= sbiBranchServices.updateBranchDetails(sBIBranchEntity,branchCode);
-//		
-//		if(null != meetingCalender) {
-//		request.setAttribute("message", " <font  style='color:green;font-weight:bold'> Meeting Record update Successfully ! </font>");
-//		}else {
-//			request.setAttribute("message", "<font  style='color:green'> Meeting Record update failed ! </font>");	
-//		}
-//		return "edit-meeting-details.jsp";
+//	@RequestMapping(value="/search-meeting-by-branch-location",method = RequestMethod.POST)
+//	public String searchByMeetingBranch(@ModelAttribute MeetingCalenderEntity meetingCalenderEntity) {
+//		meetingCalenderEntity.
+//		return "all-meeting-details.jsp";
 //		
 //	}
+
+	@RequestMapping(value="/search-meeting-by-branch-location",method = RequestMethod.POST)
+    public String searchByMeetingBranch(Model model, HttpServletRequest request) {
+		String meetingBranch = request.getParameter("officelocation");
+        model.addAttribute("calender_info_detailss", meetingCalenderServices.findByMeetingBranchName(meetingBranch));  
+         List<OfficeLocationsDTO> officeLocDtos = meetingCalenderServices.populateOfficeLocations();
+         
+         request.setAttribute("officeLocDtos",officeLocDtos);
+         
+         return "all-meeting-details.jsp";
+    }
 	
 }
 
