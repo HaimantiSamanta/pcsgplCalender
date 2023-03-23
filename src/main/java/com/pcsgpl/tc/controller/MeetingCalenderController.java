@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.pcsgpl.tc.dto.MeetingCalenderDTO;
 import com.pcsgpl.tc.dto.OfficeLocationsDTO;
 import com.pcsgpl.tc.entity.MeetingCalenderEntity;
-import com.pcsgpl.tc.repository.MeetingCalenderRepository;
+//import com.pcsgpl.tc.repository.MeetingCalenderRepository;
 import com.pcsgpl.tc.service.MeetingCalenderService;
 
 
@@ -60,18 +60,7 @@ public class MeetingCalenderController {
 		return "calender-registration.jsp";
 		//return "meetingCalender";
 	}
-	
-//	@RequestMapping(value ="/GetAllMeetingDetails", method = RequestMethod.GET)
-//	public String getAllMeetingCalenderServiceDetails(@ModelAttribute MeetingCalenderEntity meetingCalenderEntity){	
-//		List<MeetingCalenderEntity> listOfMeetingInfo = meetingCalenderServices.getAllMeetingCalenderDetails();
-//		return listOfMeetingInfo;
-//		
-//		//MeetingCalenderEntity meetingCalenderEntitys  = new MeetingCalenderEntity();
-//		//meetingCalenderEntity.addObject("meetingCalenderEntitys", meetingCalenderEntitys);
-//		//meetingCalenderEntity.put("products", meetingCalenderServices.getAllMeetingCalenderDetails());
-//		return "all-meeting-details.jsp";
-//	}
-//	
+		
 	@RequestMapping("/GetAllMeetingDetails")
     public String home(Model model,HttpServletRequest request) {
          model.addAttribute("calender_info_detailss", meetingCalenderServices.getAllMeetingCalenderDetails());  
@@ -124,13 +113,6 @@ public class MeetingCalenderController {
         
         request.setAttribute("meetingId", meetingId);
         
-//        boolean returnFlag1= meetingCalenderServices.updateMeetingDetailsByMeetingId(meetingId);
-//        if(returnFlag1) {
-//  		  request.setAttribute("Update-message", "Record Updated Successfully!");
-//  		  model.addAttribute("calender_info_detailss", meetingCalenderServices.getAllMeetingCalenderDetails());        
-//  	      
-//  	  }
-        
 		return "edit-meeting-details.jsp";
 	}      
 
@@ -162,23 +144,29 @@ public class MeetingCalenderController {
 			
 	}
 	
-//	@RequestMapping(value="/search-meeting-by-branch-location",method = RequestMethod.POST)
-//	public String searchByMeetingBranch(@ModelAttribute MeetingCalenderEntity meetingCalenderEntity) {
-//		meetingCalenderEntity.
-//		return "all-meeting-details.jsp";
-//		
-//	}
 
 	@RequestMapping(value="/search-meeting-by-branch-location",method = RequestMethod.POST)
     public String searchByMeetingBranch(Model model, HttpServletRequest request) {
 		String meetingBranch = request.getParameter("officelocation");
         model.addAttribute("calender_info_detailss", meetingCalenderServices.findByMeetingBranchName(meetingBranch));  
-         List<OfficeLocationsDTO> officeLocDtos = meetingCalenderServices.populateOfficeLocations();
+        List<OfficeLocationsDTO> officeLocDtos = meetingCalenderServices.populateOfficeLocations();
          
-         request.setAttribute("officeLocDtos",officeLocDtos);
+        request.setAttribute("officeLocDtos",officeLocDtos);
          
          return "all-meeting-details.jsp";
     }
 	
+	@RequestMapping(value="/search-meeting-by-form-date-to-date",method = RequestMethod.POST)
+    public String searchByMeetingDate(Model model, HttpServletRequest request) {
+		
+		String meetingStartDate= request.getParameter("meetingStartDate");
+        model.addAttribute("calender_info_detailss", meetingCalenderServices.findByMeetingBranchName(meetingStartDate));  
+        
+        
+        List<OfficeLocationsDTO> officeLocDtos = meetingCalenderServices.populateOfficeLocations();         
+        request.setAttribute("officeLocDtos",officeLocDtos);
+         
+        return "all-meeting-details.jsp";
+    }
 }
 

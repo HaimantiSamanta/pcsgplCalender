@@ -258,4 +258,50 @@ public class MeetingCalenderService {
 		return listOfModifiedMeetingInfo;
 	}
 
+	public List<MeetingCalenderDTO> findByMeetingFormDateToDate(String meetingStartDate) {
+		System.out.println(" Search Branch Value  ---> "+ meetingStartDate);
+		List<MeetingCalenderEntity> listOfMeetingInformation = meetingCalenderrepository.findMeetingByDateRange(meetingStartDate);
+
+		List<MeetingCalenderDTO> listOfModifiedMeetingInfo = new ArrayList<MeetingCalenderDTO>();
+
+		for (MeetingCalenderEntity calenderEntity : listOfMeetingInformation) {
+			MeetingCalenderDTO meetingCalenderDTO = new MeetingCalenderDTO();
+			
+			if(null != calenderEntity.getMeetingStartDate()) {
+			String meetingStartDate1 = new SimpleDateFormat("dd-MM-yyyy").format(calenderEntity.getMeetingStartDate());
+			meetingCalenderDTO.setMeetingStartDate(meetingStartDate1);
+			}
+			
+           if(null != calenderEntity.getMeetingEndDate()) {  
+			String meetingEndDate = new SimpleDateFormat("dd-MM-yyyy").format(calenderEntity.getMeetingEndDate());
+			meetingCalenderDTO.setMeetingEndDate(meetingEndDate);
+           }  
+		         
+
+			meetingCalenderDTO.setMeetingCategory(calenderEntity.getMeetingCategory());
+				
+			meetingCalenderDTO.setMeetingOccuranceType(calenderEntity.getMeetingOccuranceType());
+
+			meetingCalenderDTO.setMeetingId(calenderEntity.getMeetingId());
+			meetingCalenderDTO.setZoomUrl(calenderEntity.getZoomUrl());
+
+			meetingCalenderDTO.setMeetingPasscode(calenderEntity.getMeetingPasscode());
+			meetingCalenderDTO.setMeetingStartTime(calenderEntity.getMeetingStartTime());
+			meetingCalenderDTO.setMeetingStartMeridiem(calenderEntity.getMeetingStartMeridiem());
+
+			meetingCalenderDTO.setMeetingEndTime(calenderEntity.getMeetingEndTime());
+			meetingCalenderDTO.setMeetingEndMeridiem(calenderEntity.getMeetingEndMeridiem());
+
+			meetingCalenderDTO.setMeetingTitle(calenderEntity.getMeetingTitle());
+			meetingCalenderDTO.setMeetingShortDesc(calenderEntity.getMeetingShortDesc());
+
+			meetingCalenderDTO.setMeetingBranch(calenderEntity.getMeetingBranch());
+			listOfModifiedMeetingInfo.add(meetingCalenderDTO);
+		}  
+         System.out.println(" Seach List size : "+ listOfModifiedMeetingInfo.size());
+		return listOfModifiedMeetingInfo;
+	}
+
+	
+	
 }

@@ -33,12 +33,12 @@
 	    </form>
 	  
 	    <form >
-	        <table style="align:center">
+	        <table style="align:center" action="/search-meeting-by-form-date-to-date" method="post">
 	            <tr>
 	            <td>
-	                   From Date <input type="date" name="fromdate" />
+	                   From Date <input type="date" name="meetingStartDate" />
 	                   <span> &nbsp;</span>
-	                   To Date <input type="date" name="todate" />
+	                   To Date <input type="date" name="meetingEndDate" />
 	           </td>
 	           <td>
 	                   <input type="submit" value="Search" />
