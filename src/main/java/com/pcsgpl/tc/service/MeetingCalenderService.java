@@ -258,10 +258,15 @@ public class MeetingCalenderService {
 		return listOfModifiedMeetingInfo;
 	}
 
-	public List<MeetingCalenderDTO> findByMeetingFormDateToDate(String meetingStartDate) {
-		System.out.println(" Search Branch Value  ---> "+ meetingStartDate);
-		List<MeetingCalenderEntity> listOfMeetingInformation = meetingCalenderrepository.findMeetingByDateRange(meetingStartDate);
+	public List<MeetingCalenderDTO> findByMeetingFormDateToDate(String meetingStartDate,String meetingEndDate) {
+		System.out.println(" Search Start Value  ---> "+ meetingStartDate);
+		List<MeetingCalenderEntity> listOfMeetingInformation = meetingCalenderrepository.findMeetingByDateRange(meetingStartDate,meetingEndDate);
 
+		System.out.println("search by date"+listOfMeetingInformation);
+		if(null != listOfMeetingInformation) {
+			System.out.println("Size of List of meeting:: "+ listOfMeetingInformation.size());
+		}
+		
 		List<MeetingCalenderDTO> listOfModifiedMeetingInfo = new ArrayList<MeetingCalenderDTO>();
 
 		for (MeetingCalenderEntity calenderEntity : listOfMeetingInformation) {
@@ -273,8 +278,8 @@ public class MeetingCalenderService {
 			}
 			
            if(null != calenderEntity.getMeetingEndDate()) {  
-			String meetingEndDate = new SimpleDateFormat("dd-MM-yyyy").format(calenderEntity.getMeetingEndDate());
-			meetingCalenderDTO.setMeetingEndDate(meetingEndDate);
+			String meetingEndDate1 = new SimpleDateFormat("dd-MM-yyyy").format(calenderEntity.getMeetingEndDate());
+			meetingCalenderDTO.setMeetingEndDate(meetingEndDate1);
            }  
 		         
 

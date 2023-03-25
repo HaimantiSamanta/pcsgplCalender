@@ -148,6 +148,7 @@ public class MeetingCalenderController {
 	@RequestMapping(value="/search-meeting-by-branch-location",method = RequestMethod.POST)
     public String searchByMeetingBranch(Model model, HttpServletRequest request) {
 		String meetingBranch = request.getParameter("officelocation");
+		System.out.println("In MeetingCalendarController:: Method:: search-meeting-by-branch-loc:: "+meetingBranch);
         model.addAttribute("calender_info_detailss", meetingCalenderServices.findByMeetingBranchName(meetingBranch));  
         List<OfficeLocationsDTO> officeLocDtos = meetingCalenderServices.populateOfficeLocations();
          
@@ -160,7 +161,9 @@ public class MeetingCalenderController {
     public String searchByMeetingDate(Model model, HttpServletRequest request) {
 		
 		String meetingStartDate= request.getParameter("meetingStartDate");
-        model.addAttribute("calender_info_detailss", meetingCalenderServices.findByMeetingBranchName(meetingStartDate));  
+		String meetingEndDate= request.getParameter("meetingEndDate");
+		System.out.println("In MeetingCalendarCOntroller:: Method:: search-meeting-by-form-date-to-date:: "+ meetingStartDate);
+        model.addAttribute("calender_info_detailss", meetingCalenderServices.findByMeetingFormDateToDate(meetingStartDate,meetingEndDate));  
         
         
         List<OfficeLocationsDTO> officeLocDtos = meetingCalenderServices.populateOfficeLocations();         

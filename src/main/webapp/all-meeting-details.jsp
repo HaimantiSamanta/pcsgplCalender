@@ -32,21 +32,23 @@
 	         </table>
 	    </form>
 	  
-	    <form >
-	        <table style="align:center" action="/search-meeting-by-form-date-to-date" method="post">
+	    <form action="/search-meeting-by-form-date-to-date" method="post">
+	        <table style="align:center">
 	            <tr>
 	            <td>
-	                   From Date <input type="date" name="meetingStartDate" />
-	                   <span> &nbsp;</span>
-	                   To Date <input type="date" name="meetingEndDate" />
+	                   From Date <input type="date" name="meetingStartDate" required="required"/>
+	                    <span> &nbsp;</span>
+	                   To Date <input type="date" name="meetingEndDate" required="required"/> 
 	           </td>
 	           <td>
-	                   <input type="submit" value="Search" />
+	                   <input type="submit" value="SearchByDate" />
 	          </td>
 	        
 	           </tr>        
 	         </table>
 	    </form>
+	    
+	    
 	    <% if(request.getAttribute("delete-message") != null){ %>
 	               <%=request.getAttribute("delete-message")%>
 	    <%}%>

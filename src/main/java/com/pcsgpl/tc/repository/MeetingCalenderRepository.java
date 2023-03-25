@@ -22,8 +22,8 @@ public interface MeetingCalenderRepository extends JpaRepository<MeetingCalender
 	//public List<MeetingCalenderEntity> findMeetingByDateRange(@Param("startDate") Date meetingStartDate,
 			  // @Param("endDate") Date meetingEndDate);
 	
-//	@Query(select c from calender_info_details where c.meeting_start_date>= : meetingStartDate )
-	public List<MeetingCalenderEntity> findMeetingByDateRange(String meetingStartDate);
+	@Query(value="select * from calender_info_details c where c.meeting_start_date>=:meetingStartDate and c.meeting_end_date<=:meetingEndDate",nativeQuery=true)
+	public List<MeetingCalenderEntity> findMeetingByDateRange(@Param("meetingStartDate")String meetingStartDate,@Param("meetingEndDate")String meetingEndDate);
 
 	//public List<MeetingCalenderEntity> findByMeetingDates(String meeting_start_date, String meeting_end_date);
 
